@@ -16,7 +16,6 @@ import numpy as np
 import pybullet as p
 import matplotlib.pyplot as plt
 import time
-from code_release.motion_planning.M4 import M4
 from robot import Simple_Manipulator
 from networkx import Graph
 
@@ -91,7 +90,7 @@ def main(q_num):
         for sample in samples:
 
             #check if in bounds
-            assert np.all(lower_lims <= sample) and np.all(upper_lims >= sample), "\n\n\nsampled joints {} outside lims\n\n\n".format(sample)
+            assert np.all(lower_lims < sample) and np.all(upper_lims > sample), "\n\n\nsampled joints {} outside lims\n\n\n".format(sample)
 
             #check if in collision
             robot.set_joint_positions(sample)

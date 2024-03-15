@@ -18,8 +18,7 @@ def M1(q_min: np.array, q_max: np.array, num_samples: int) -> np.array:
         num_samples x 4 numpy array of joint angles, all within joint limits
     """
 
+
+    ### student code start here
+    raise NotImplementedError
     
-    samples = np.random.uniform(q_min, q_max, size=(num_samples, len(q_min)))
-
-
-    return samples

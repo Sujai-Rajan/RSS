@@ -33,38 +33,6 @@ def M2(robot: Robot, num_samples: int, num_neighbors: int) -> typing.Tuple[np.ar
     # robot.check_edge() -> check the linear path between 2 joint configurations for collisions
     
     ### student code start here
-   
-    samples = []
-    while len(samples) < num_samples:
-        sample = M1(robot.lower_lims, robot.upper_lims, 1)[0]
-        if not robot.is_in_collision(sample):
-            samples.append(sample)
-    samples = np.array(samples)
-
-   
-    start_sample = np.array([0., 0., 0., 0.])
-    goal_sample = np.array([0, -np.pi, 0, -np.pi])
-
-    if not any(np.array_equal(sample, start_sample) for sample in samples):
-        samples[0] = start_sample  
-
-
-    if not any(np.array_equal(sample, goal_sample) for sample in samples):
-        samples[-1] = goal_sample  
-
-
-    G = Graph()
-
-    for i, sample in enumerate(samples):
-        G.add_node(i, configuration=sample)
-
-  
-    for i in range(num_samples):
-        for j in range(i + 1, num_samples):
-            if robot.check_edge(samples[i], samples[j], resolution=10):
-                distance = np.linalg.norm(samples[i] - samples[j])
-                G.add_edge(i, j, weight=distance)
-
+    raise NotImplementedError
     
-
     return samples, G

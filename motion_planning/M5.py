@@ -1,8 +1,6 @@
 import numpy as np
 from robot import Simple_Manipulator as Robot
 
-
-
 def M5(robot: Robot, path: np.array) -> np.array:
     """Smooth the given path
 
@@ -22,16 +20,6 @@ def M5(robot: Robot, path: np.array) -> np.array:
     """
 
     #student work start here
+    raise NotImplementedError
 
-
-
-    smoothed_path = [path[0]] 
-
-    for i in range(1, len(path)):
-        if not robot.is_in_collision(path[i]):
-            smoothed_path.append(path[i])
-
-    return np.array(smoothed_path)
-
-
-
+    return path
