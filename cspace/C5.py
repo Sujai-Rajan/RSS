@@ -28,9 +28,14 @@ def C5_func(q_grid: np.array, q_start: np.array, q_goal:np.array, c_path: typing
     """
 
     ### Insert your code below: ###
+    # Initialize the path with the start configuration
     q_path = [q_start]
+
+    # Iterate through the indices of the path and convert them to actual robot configurations
     for idx in c_path:
         q_path.append([q_grid[idx[0]], q_grid[idx[1]]])
+
+    # Append the goal configuration to the path
     q_path.append(q_goal)
 
     return q_path

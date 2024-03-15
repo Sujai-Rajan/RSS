@@ -19,9 +19,7 @@ def C1_func(robot: typing.Dict[str, typing.List[float]], q: typing.List[float], 
     """
 
     ### Insert your code below:
-
   
-
     shape1, shape2, pivot1, pivot2 = q2poly(robot, q)
 
     plot_obstacles_robot(obstacles=obstacles, link1=shape1, link2=shape2, origin1=pivot1, origin2=pivot2)
