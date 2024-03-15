@@ -47,6 +47,7 @@ def plot_path_visualization(robot, q_path, obstacles):
         C1_func(robot, q_path[i], obstacles)
         plt.draw()
         plt.pause(1.0 / fps)
+        plt.show(block = False)
         plt.close()
     
 
