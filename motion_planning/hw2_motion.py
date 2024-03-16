@@ -109,6 +109,9 @@ def main(q_num):
         # configuration samples and weighted adjacency matrix
         # TODO: Implement this function
         samples, graph = M2(robot, num_samples, num_neighbors)
+        # print("Samples: ", samples.shape)
+        # print("len(samples): ", len(samples))   
+        # print(samples)
         assert len(samples) == num_samples
         assert type(graph) == Graph
         assert len(graph) == len(samples)

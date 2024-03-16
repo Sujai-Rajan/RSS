@@ -40,7 +40,4 @@ def C7_func(cspace: np.array) -> np.array:
                         if 0 <= new_i < rows and 0 <= new_j < cols:
                             padded_cspace[new_i, new_j] = padding_value
 
-
-    
-
     return padded_cspace

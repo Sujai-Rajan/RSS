@@ -42,7 +42,7 @@ def C2_func(robot: typing.Dict[str, typing.List[float]], cspace: np.array, obsta
     grid_size = (cspace_resolution , cspace_resolution)
     # grid_size = (100, 100)
 
-    c_space = np.zeros((grid_size))
+    cspace = np.zeros((grid_size))
     # print(grid_size)
     
     # Define the range of angles for both joints (assuming 0 to 2pi for each joint)

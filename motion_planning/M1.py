@@ -19,6 +19,13 @@ def M1(q_min: np.array, q_max: np.array, num_samples: int) -> np.array:
     """
 
 
-    ### student code start here
-    raise NotImplementedError
-    
+    # ### student code start here
+    # raise NotImplementedError
+
+    # final_samples = []
+    # Loop through each joint and sample uniformly between the min and max
+    final_samples = np.random.uniform(q_min, q_max, size=(num_samples, len(q_min)))
+
+    # return the final samples
+    return final_samples
+
