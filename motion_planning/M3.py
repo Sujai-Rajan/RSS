@@ -38,72 +38,34 @@ def M3(robot: Robot, samples: np.array, G: Graph, q_start: np.array, q_goal: np.
 
     # # #student code start here
     # # raise NotImplementedError
-    # # Step 1: Add start and goal to the graph
-    # G.add_node('start', config=q_start)
-    # G.add_node('goal', config=q_goal)
-    # tree = KDTree(samples)
 
-    # # Connect start and goal to their nearest neighbors in the samples
-    # for q_node in ['start', 'goal']:
-    #     _, indices = tree.query(G.nodes[q_node]['config'], k=5)  # Adjust k as needed
-    #     for index in indices:
-    #         neighbor = samples[index]
-    #         if robot.check_edge(G.nodes[q_node]['config'], neighbor, resolution=10):  # resolution for thorough checks
-    #             distance = np.linalg.norm(G.nodes[q_node]['config'] - neighbor)
-    #             G.add_edge(q_node, index, weight=distance)
+    # Add start and goal configurations as special nodes in the graph
+    G.add_node('start', config=q_start)
+    G.add_node('goal', config=q_goal)
 
-    # # Step 2: Find the shortest path from start to goal
-    # try:
-    #     path_indices = dijkstra_path(G, 'start', 'goal', weight='weight')
-    #     path_found = True
-    # except nx.NetworkXNoPath:
-    #     print("No path found.")
-    #     path_found = False
-    #     return np.array([]), path_found
+    # Use KDTree for efficient nearest neighbor search among the samples
+    tree = KDTree(samples)
 
-    # # Step 3: Construct the path from the indices
-    # path = np.array([G.nodes[index]['config'] for index in path_indices if isinstance(index, int)])
-    # path = np.vstack([q_start, path, q_goal])  # Ensure start and goal are included
+    # Function to connect a special node (start/goal) to its nearest neighbors in the graph
+    def connect_node(node_key: str, num_connections: int = 5):
+        distances, indices = tree.query(G.nodes[node_key]['config'], k=num_connections)
+        for i, index in enumerate(indices):
+            if robot.check_edge(G.nodes[node_key]['config'], samples[index]):
+                G.add_edge(node_key, index, weight=distances[i])
 
-    # return path, path_found
+    # Connect start and goal to the graph
+    connect_node('start')
+    connect_node('goal')
 
-
- 
-    start_node_distances = np.linalg.norm(samples - q_start, axis=1)
-    goal_node_distances = np.linalg.norm(samples - q_goal, axis=1)
-
-    sort_start_distance = np.argsort(start_node_distances)
-    sort_goal_distance = np.argsort(goal_node_distances)
-
-    start_neighbours = samples[sort_start_distance]
-    goal_neighbours = samples[sort_goal_distance]
-
-    on_start = None
-    off_goal = None
-
- 
-    for i in range(len(start_neighbours)):
-        collision = robot.is_in_collision(start_neighbours[i])
-        if not collision:
-            on_start = sort_start_distance[i]
-            break
-
- 
-    for i in range(len(goal_neighbours)):
-        collision = robot.is_in_collision(goal_neighbours[i])
-        if not collision:
-            off_goal = sort_goal_distance[i]
-            break
-
-
-    if on_start is not None and off_goal is not None:
-        path_indices = shortest_path(G, source=on_start, target=off_goal)
-        path = samples[path_indices]
-        path = np.vstack((q_start, path, q_goal))
-        path_found = len(path_indices) > 0
-    else:
+    # Attempt to find a path from 'start' to 'goal' in the graph
+    try:
+        # Use Dijkstra's algorithm to find the shortest path
+        path_indices = dijkstra_path(G, 'start', 'goal', weight='weight')
+        # Construct the path from the indices, converting special nodes back to their configurations
+        path = np.array([G.nodes[idx]['config'] if idx in G.nodes else idx for idx in path_indices])
+        path_found = True
+    except nx.NetworkXNoPath:
         path = np.array([])
         path_found = False
-        
 
     return path, path_found
