@@ -3,6 +3,10 @@ import numpy as np
 
 import utils
 
+global num_iterations
+num_iterations = 1500
+
+
 
 def q1_a(P: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     '''
@@ -69,7 +73,6 @@ def q1_c(P: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
 
 
     # Initialize variables
-    num_iterations = 1500
     best_inliers = []
     best_normal = None
     best_center = None
