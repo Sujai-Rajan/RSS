@@ -453,6 +453,7 @@ class Simulator:
 if __name__ == "__main__":
     sim = Simulator()
 
+    labels = []
     for _ in range(50):
         sim.reset()
         img = sim.render_image()
@@ -468,5 +469,8 @@ if __name__ == "__main__":
             theta = np.pi/2
 
         label = sim.execute_grasp(x, y, theta)
+        labels.append(label)
         time.sleep(0.1)
         print('SUCCESS' if label else 'FAILURE')
+
+    print(f'Grasp success rate: {np.mean(labels):.1%}')

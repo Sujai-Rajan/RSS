@@ -65,13 +65,13 @@ class GraspDataset(Dataset):
         # Implement this function for Q4
         ################################
 
-        return img, action
+        # return img, action
 
         # Randomly select an angle from the list
         rot_angle = int(np.random.choice([0, 90, 180, 270]))
 
         # Rotate the image
-        img = TF.rotate(img, rot_angle)
+        img_final = TF.rotate(img, rot_angle)
 
         # Action is (px, py, rot_id)
         px, py, rot_id = action
@@ -79,25 +79,27 @@ class GraspDataset(Dataset):
         # Get the height and width of the image
         H, W = img.shape[:2]
 
+        print(f"H: {H}, W: {W}")
+
         # Rotate the action
         if rot_angle == 0:
-            pass
+            new_px, new_py = px, py
 
         elif rot_angle == 90:
-            px, py = py, H - px - 1
-            rot_id = 1 - rot_id
+            new_px, new_py = py, H - px - 1
+            rot_id = 1 - rot_id # Switch between 0 and 1
 
         elif rot_angle == 180:
-            px, py = H - px - 1, W - py - 1
+            new_px, new_py = H - px - 1, W - py - 1
 
         elif rot_angle == 270:
-            px, py = W - py - 1, px
-            rot_id = 1 - rot_id
+            new_px, new_py = W - py - 1, px
+            rot_id = 1 - rot_id # Switch between 0 and 1
 
         # Return the rotated image and action
-        action_final = np.array([px, py, rot_id])
+        action_final = np.array([new_px, new_py, rot_id])
 
-        return img, action_final
+        return img_final, action_final
 
     def __getitem__(self, idx: int) -> Tuple[Tensor, Tensor]:
         img = self.imgs[idx]

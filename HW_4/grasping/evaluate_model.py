@@ -9,6 +9,8 @@ from trainer import MobileUNet
 
 
 def main(args):
+    print('Evaluating model...')
+    print(f'Loading model from {args.model_path}')
     np.random.seed(0)
     sim = Simulator(render=bool(args.render))
     num_rotations = 4
@@ -35,7 +37,7 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--model_path', '-m', type=str, default="grasp_mobilenet.pt",
+    parser.add_argument('--model_path', '-m', type=str, default="grasp_mobilenet_128.pt",
                         help='File path where torch model is saved')
     parser.add_argument('--num_grasps', '-n', type=int, default=50,
                         help='number of grasps used to evaluate model performance')

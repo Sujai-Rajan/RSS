@@ -182,6 +182,9 @@ def main():
     pbar = tqdm(range(1, NUM_EPOCHS+1))
     record = dict(train_loss=[], val_loss=[])
     for epoch_num in pbar:
+        # if val loss is not under 3 after 30 epochs, continue till val loss is under 3
+        if epoch_num == NUM_EPOCHS-1 and avg_val_loss > 3.0:
+            pbar.total += 1 # add 1 to total number of epochs
 
         train_losses = []
         model.train()
@@ -251,16 +254,13 @@ def main():
             plt.savefig('predictions.png')
             plt.close()
 
-        # if val loss is not under 3 after 30 epochs, continue till val loss is under 3
-        if epoch_num == NUM_EPOCHS-1 and avg_val_loss > 3.0:
-            pbar.total += 1 # add 1 to total number of epochs
 
     print('Training complete!')
 
 
 if __name__ == "__main__":
-    NUM_EPOCHS = 30
-    BATCH_SIZE = 32
+    NUM_EPOCHS = 50
+    BATCH_SIZE = 12
     LR = 5e-4
     PLOT_FREQ = 5 # plot predictions every this many number of epochs
     # print all available devices with its name
