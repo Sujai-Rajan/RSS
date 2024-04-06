@@ -44,12 +44,6 @@ class MobileUNet(nn.Module):
         ############################################
         # raise NotImplementedError
 
-        # Upsample the feature maps from the first backbone and then apply 1x1 conv
-        self.branch_down = nn.Sequential(
-            nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True),
-            nn.Conv2d(24, 4, kernel_size=1, stride=1, padding=0),
-        )
-        
         # # Apply 1x1 conv to the second backbone's feature maps and then upsample and apply 1x1 conv          ##### tried out a different approach - This gave better results
         # self.branch_up = nn.Sequential(
         #     nn.Conv2d(40, 128, kernel_size=1, stride=1, padding=0),
@@ -58,6 +52,7 @@ class MobileUNet(nn.Module):
         #     nn.Conv2d(128, 4, kernel_size=1, stride=1, padding=0),
         # )
         
+
         # Apply 1x1 conv to the second backbone's feature maps and then upsample
         self.branch_up = nn.Sequential(
             nn.Conv2d(40, 4, kernel_size=1, stride=1, padding=0),
@@ -65,6 +60,12 @@ class MobileUNet(nn.Module):
             nn.Upsample(scale_factor=8, mode='bilinear', align_corners=True),
         )
 
+        # Upsample the feature maps from the first backbone and then apply 1x1 conv
+        self.branch_down = nn.Sequential(
+            nn.Upsample(scale_factor=4, mode='bilinear', align_corners=True),
+            nn.Conv2d(24, 4, kernel_size=1, stride=1, padding=0),
+        )
+        
         # Final output 
         self.final_branch = nn.Sequential(
             nn.Conv2d(4, num_rots, kernel_size=1, stride=1, padding=0),
@@ -105,7 +106,6 @@ class MobileUNet(nn.Module):
         logits = self.final_branch(combined)  # Shape: (B, 2, 64, 64)
 
         return logits
-    
     
 
 
@@ -254,20 +254,26 @@ def main():
             plt.savefig('predictions.png')
             plt.close()
 
+        if avg_val_loss < 3.5:
+            break
+
 
     print('Training complete!')
 
 
 if __name__ == "__main__":
-    NUM_EPOCHS = 50
+    NUM_EPOCHS = 30
     BATCH_SIZE = 12
     LR = 5e-4
     PLOT_FREQ = 5 # plot predictions every this many number of epochs
+
     # print all available devices with its name
-    print(torch.cuda.device_count())
-    print(torch.cuda.get_device_name(0))
+    if torch.cuda.is_available():
+        for i in range(torch.cuda.device_count()):
+            print(torch.cuda.get_device_name(i))
+
     DEVICE = torch.device('cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu'))
-    # DEVICE = 'cpu'
+    # DEVICE = 'cpu' # Uncomment this line to use CPU
     print(f'Using device: {DEVICE}')
     main()
 

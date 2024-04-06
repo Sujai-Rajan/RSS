@@ -71,35 +71,36 @@ class GraspDataset(Dataset):
         rot_angle = int(np.random.choice([0, 90, 180, 270]))
 
         # Rotate the image
-        img_final = TF.rotate(img, rot_angle)
+        img = TF.rotate(img, rot_angle)
 
         # Action is (px, py, rot_id)
         px, py, rot_id = action
 
         # Get the height and width of the image
-        H, W = img.shape[:2]
+        _ , H, W = img.shape
 
-        print(f"H: {H}, W: {W}")
+        # print(f"H: {H}, W: {W}")
 
         # Rotate the action
         if rot_angle == 0:
             new_px, new_py = px, py
 
         elif rot_angle == 90:
-            new_px, new_py = py, H - px - 1
             rot_id = 1 - rot_id # Switch between 0 and 1
+            new_px, new_py = W - py - 1, px
 
         elif rot_angle == 180:
             new_px, new_py = H - px - 1, W - py - 1
 
         elif rot_angle == 270:
-            new_px, new_py = W - py - 1, px
             rot_id = 1 - rot_id # Switch between 0 and 1
+            new_px, new_py = py, H - px - 1
+
 
         # Return the rotated image and action
-        action_final = np.array([new_px, new_py, rot_id])
+        action_new = np.array([new_px, new_py, rot_id])
 
-        return img_final, action_final
+        return img, action_new
 
     def __getitem__(self, idx: int) -> Tuple[Tensor, Tensor]:
         img = self.imgs[idx]
